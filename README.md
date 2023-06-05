@@ -7,7 +7,7 @@ Cette API fonctionne avec une base de données **PostgreSql** (version 15)
 1. Cloner le repository
 
 ````console
-git clone [https://github.com/Robnelito/API-GB.git](https://github.com/Robnelito/apigb.git)
+git clone https://github.com/Robnelito/apigb.git
 cd API-GB
 git checkout develop
 ````
