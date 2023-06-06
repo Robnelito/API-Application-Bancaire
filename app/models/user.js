@@ -1,5 +1,5 @@
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
+let jwt = require('jsonwebtoken');
+let bcrypt = require('bcryptjs');
 
 const {pool} = require('./pollpg')
 
@@ -29,9 +29,29 @@ const loginUtilisateur = (req, res) => {
         if (error) {
             throw error
         }
-        bcrypt.compareSync(password, results.rows[0].password).then(
-            res.send("connecter")
-        )
+        bcrypt.compare(password, results.rows[0].password, (err, isMatch) => {
+            if (err) {
+                res.json({
+                    "message": err
+                })
+            } else if (!isMatch) {
+                res.json({
+                    "message": "mot de passe incorrecte"
+                })
+            } else {
+                let email = results.rows[0].email
+                const token = jwt.sign({numero_utilisateur: results.rows[0].numero_utilisateur, email},
+                    process.env.TOKEN_KEY,
+                    {
+                        expiresIn: "2h",
+                    }
+                )
+                res.json({
+                    "message": "connecter",
+                    "token": token
+                })
+            }
+        })
 
         // res.status(200).json(results.rows)
     })
