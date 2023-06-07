@@ -8,7 +8,12 @@ const retrait = (req, res) => {
     retraitModel.retrait(req, res)
 }
 
+const updateRetrait = (req, res) => {
+    retraitModel.updateRetrait(req, res)
+}
+
 module.exports = {
     getClientSolde,
-    retrait
+    retrait,
+    updateRetrait
 }
