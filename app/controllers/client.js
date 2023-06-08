@@ -20,10 +20,15 @@ const deleteClient = (req, res) => {
     clientModel.deleteClient(req, res)
 }
 
+const searchClient = (req, res) => {
+    clientModel.searchClient(req, res)
+}
+
 module.exports = {
     getClients,
     getClient,
     createClient,
     updateClient,
-    deleteClient
+    deleteClient,
+    searchClient
 }
