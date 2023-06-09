@@ -47,14 +47,24 @@ const updateClient = (req, res) => {
     )
 }
 
-const deleteClient = (request, response) => {
-    const numero_compte = parseInt(request.params.numero_compte)
+const deleteClient = (req, res) => {
+    const numero_compte = parseInt(req.params.numero_compte)
 
     pool.query('DELETE FROM client WHERE numero_compte = $1', [numero_compte], (error, results) => {
         if (error) {
             throw error
         }
-        response.status(200).send(`User deleted with ID: ${numero_compte}`)
+        res.status(200).send(`User deleted with ID: ${numero_compte}`)
+    })
+}
+
+const searchClient = (req, res) => {
+    const q = "%" + req.body.q + "%"
+    
+    pool.query('SELECT * FROM client WHERE lower(nom) LIKE lower($1)', [q], (error, results) => {
+        if (error)
+            throw error
+        res.status(200).json(results.rows)
     })
 }
 
@@ -63,5 +73,6 @@ module.exports = {
     getClient,
     createClient,
     updateClient,
-    deleteClient
+    deleteClient,
+    searchClient
 }
