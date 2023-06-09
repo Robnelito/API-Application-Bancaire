@@ -118,7 +118,7 @@ const modifierversement = (req, res) => {
                     console.log(date_modif);
 
                     //Modifier le versement correspondant
-                    pool.query('UPDATE versement SET numero_cheque = $1, montant_versement = $2, date_modification = $3 WHERE id = $4', [numero_cheque,soldeModif, date_modif, id], (error, results) => {
+                    pool.query('UPDATE versement SET numero_cheque = $1, montant_versement = $2, date_modification = $3 WHERE id = $4', [numero_cheque, soldeModif, date_modif, id], (error, results) => {
                         if (error) {
                             throw error;
                         }
@@ -130,20 +130,47 @@ const modifierversement = (req, res) => {
     })
 }
 
-const rechercheParDate = (req,res) => {
-    const date = req.body.date;
+//Recherche par date et par numéro de chèque
+const rechercheParDate = (req, res) => {
+    const { date, numero_cheque } = req.body;
+    let query = "SELECT * FROM versement WHERE ";
+    let values = [];
 
-    //Recherche par date
-    pool.query('SELECT id,numero_compte,montant_versement,date FROM versement WHERE date = $1', [date], (error,results) => {
+    if (date && numero_cheque) {
+        query += "date_trunc('day', date) = $1::DATE AND numero_cheque = $2::TEXT";
+        values.push(date, numero_cheque);
+    } else if (date) {
+        query += "date_trunc('day', date) = $1::DATE";
+        values.push(date);
+    } else if (numero_cheque) {
+        query += "numero_cheque = $1::TEXT";
+        values.push(numero_cheque);
+    } else if (req.query.month) {
+        const month = parseInt(req.query.month);
+        if (isNaN(month) || month < 1 || month > 12) {
+            return res.status(400).json([]);
+        }
+        query += "EXTRACT(MONTH FROM date) = $1";
+        values.push(month);
+    } else if (req.query.year) {
+        const year = parseInt(req.query.year);
+        if (isNaN(year) || year < 1) {
+            return res.status(400).json([]);
+        }
+        query += "EXTRACT(YEAR FROM date) = $1";
+        values.push(year);
+    } else {
+        // Si aucun champ n'est spécifié, renvoyer une réponse vide
+        return res.status(400).json([]);
+    }
+
+    pool.query(query, values, (error, results) => {
         if (error) {
             throw error;
         }
-        res.status(200).json(results.rows)
-    })
+        res.status(200).json(results.rows);
+    });
 }
-
-
-
 
 module.exports = {
     versement,
