@@ -60,7 +60,7 @@ const deleteClient = (req, res) => {
 
 const searchClient = (req, res) => {
     const q = "%" + req.body.q + "%"
-    // const q = "%RAKOTO%"
+    
     pool.query('SELECT * FROM client WHERE lower(nom) LIKE lower($1)', [q], (error, results) => {
         if (error)
             throw error
