@@ -12,6 +12,14 @@ const getClientSolde = async (req, res) => {
   }
 };
 
+const getTransfert = (req, res) => {
+  transfertModel.getTransfert(req, res)
+}
+
+const getTransfertById = (req, res) => {
+  transfertModel.getTransfertById(req, res)
+}
+
 const effectuerTransfert = async (req, res) => {
   const { numero_compte_source, numero_compte_destination, montant } = req.body;
     console.log(numero_compte_destination)
@@ -49,5 +57,7 @@ const effectuerTransfert = async (req, res) => {
 
 module.exports = {
   getClientSolde,
+  getTransfert,
+  getTransfertById,
   effectuerTransfert,
 };

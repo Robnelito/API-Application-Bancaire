@@ -17,7 +17,7 @@ const getClientSolde = (req, res) => {
 
 const getRetrait = (req, res) => {
   pool.query(
-    'SELECT * From retrait ORDER BY date_retrait ASC',
+    "SELECT * From retrait ORDER BY date_retrait ASC",
     (error, results) => {
       if (error) {
         throw error;
@@ -245,14 +245,14 @@ const deleteRetrait = (request, response) => {
   );
 };
 
-
 const searchRetrait = (req, res) => {
   const { date_retrait, numero_cheque } = req.body;
   let query = "SELECT * FROM retrait WHERE ";
   let values = [];
 
   if (date_retrait && numero_cheque) {
-    query += "date_trunc('day', date_retrait) = $1::DATE AND numero_cheque = $2::TEXT";
+    query +=
+      "date_trunc('day', date_retrait) = $1::DATE AND numero_cheque = $2::TEXT";
     values.push(date_retrait, numero_cheque);
   } else if (date_retrait) {
     query += "date_trunc('day', date_retrait) = $1::DATE";
@@ -287,14 +287,11 @@ const searchRetrait = (req, res) => {
   });
 };
 
-
-
-
 module.exports = {
   getRetrait,
   getClientSolde,
   retrait,
   updateRetrait,
   deleteRetrait,
-  searchRetrait
+  searchRetrait,
 };

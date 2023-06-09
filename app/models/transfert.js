@@ -7,7 +7,11 @@ const getClientSolde = (numero_compte) => {
       [numero_compte],
       (error, results) => {
         if (error) {
-          reject(new Error("Une erreur est survenue lors de la récupération du solde du client"));
+          reject(
+            new Error(
+              "Une erreur est survenue lors de la récupération du solde du client"
+            )
+          );
         } else {
           if (results.rows.length === 0) {
             reject(new Error("Aucun solde trouvé pour ce numéro de compte"));
@@ -20,6 +24,32 @@ const getClientSolde = (numero_compte) => {
       }
     );
   });
+};
+
+const getTransfert = (req, res) => {
+  pool.query(
+    "SELECT * FROM historique_transfert ORDER BY date_transfert ASC",
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      res.status(200).json(results.rows);
+    }
+  );
+};
+const getTransfertById = (req, res) => {
+  const numero_transfert = parseInt(req.params.numero_transfert);
+
+  pool.query(
+    "SELECT * FROM historique_transfert WHERE id = $1",
+    [numero_transfert],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      res.status(200).json(results.rows);
+    }
+  );
 };
 
 const transfertFonds = (
@@ -55,7 +85,9 @@ const transfertFonds = (
 
       (error, results) => {
         if (error) {
-          reject(new Error("Une erreur est survenue lors du transfert de fonds"));
+          reject(
+            new Error("Une erreur est survenue lors du transfert de fonds")
+          );
         } else {
           // Effectuer la requête d'insertion dans la table historique_transferts
           pool.query(
@@ -63,8 +95,12 @@ const transfertFonds = (
             [numero_compte_source, numero_compte_destination, montant],
             (error, results) => {
               if (error) {
-                console.log(error)
-                reject(new Error("Une erreur est survenue lors de l'insertion dans la table historique_transferts"));
+                console.log(error);
+                reject(
+                  new Error(
+                    "Une erreur est survenue lors de l'insertion dans la table historique_transferts"
+                  )
+                );
               } else {
                 resolve();
               }
@@ -76,10 +112,9 @@ const transfertFonds = (
   });
 };
 
-
 module.exports = {
   getClientSolde,
+  getTransfert,
+  getTransfertById,
   transfertFonds,
 };
-
-

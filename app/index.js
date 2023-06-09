@@ -6,6 +6,7 @@ const app = express()
 const clientRouter = require('./routes/client')
 const versementRouter = require('./routes/versement')
 const retraitRouter = require('./routes/retrait')
+const tranfertRouter = require('./routes/transfert')
 // const utilisateurRouter = require('./routes/user')
 
 app.use(bodyParser.json())
@@ -20,6 +21,7 @@ app.get('/api', (req, res) => {
 app.use('/api/client', clientRouter)
 app.use('/api/versement', versementRouter)
 app.use('/api/retrait', retraitRouter)
+app.use('/api/transfert', tranfertRouter)
 // app.use('/api/utilisateur', utilisateurRouter)
 
 
