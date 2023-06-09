@@ -12,14 +12,14 @@ const getClientSolde = (req, res) => {
 };
 
 const versement = (req, res) => {
-    const numero_compte = parseInt(req.params.numero_compte);
-    const montant_versement = parseInt(req.body.montant_versement);
-    console.log(montant_versement);
+    const numero_compte = parseInt(req.params.numero_compte)
+    const montant_versement = parseInt(req.body.montant_versement)
+    const numero_cheque = req.body.numero_cheque
 
     // Récupérer le solde actuel du client
     pool.query('SELECT solde FROM client WHERE numero_compte = $1', [numero_compte], (error, results) => {
         if (error) {
-            throw error;
+            throw error
         }
 
         const solde = parseInt(results.rows[0].solde);
@@ -35,9 +35,9 @@ const versement = (req, res) => {
 
             // Insérer les données de retrait dans la table "retrait"
             const date_versement = new Date(); // Obtenir la date et l'heure actuelles
-            const values = [numero_compte, montant_versement, date_versement];
+            const values = [numero_compte, numero_cheque, montant_versement, date_versement];
             console.log(date_versement);
-            pool.query('INSERT INTO versement (numero_compte, montant_versement, date) VALUES ($1, $2, $3)', values, (error) => {
+            pool.query('INSERT INTO versement (numero_compte, numero_cheque, montant_versement, date) VALUES ($1, $2, $3, $4)', values, (error) => {
                 if (error) {
                     throw error;
                 }
@@ -84,6 +84,7 @@ const modifierversement = (req, res) => {
     const id = parseInt(req.params.id);
     console.log(id);
     const soldeModif = parseInt(req.body.montant_versement);
+    const numero_cheque = req.body.numero_cheque
 
     console.log(soldeModif);
 
@@ -98,9 +99,7 @@ const modifierversement = (req, res) => {
         const ancien_versement = parseInt(results.rows[0].montant_versement);
         console.log(ancien_versement);
 
-        if (soldeModif == ancien_versement) {
-            res.status(400).send('Aucune modification à faire.');
-        } else if (soldeModif < 0) {
+        if (soldeModif < 0) {
             res.status(400).send('Erreur ! Ce versement ne sera pas possible.');
         } else {
             //Enlever l'ancien versement dans le solde du client 
@@ -119,7 +118,7 @@ const modifierversement = (req, res) => {
                     console.log(date_modif);
 
                     //Modifier le versement correspondant
-                    pool.query('UPDATE versement SET montant_versement = $1, date_modification = $2 WHERE id = $3', [soldeModif, date_modif, id], (error, results) => {
+                    pool.query('UPDATE versement SET numero_cheque = $1, montant_versement = $2, date_modification = $3 WHERE id = $4', [numero_cheque,soldeModif, date_modif, id], (error, results) => {
                         if (error) {
                             throw error;
                         }
@@ -142,6 +141,8 @@ const rechercheParDate = (req,res) => {
         res.status(200).json(results.rows)
     })
 }
+
+
 
 
 module.exports = {

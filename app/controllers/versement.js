@@ -19,6 +19,8 @@ const modifierversement = (req,res) => [
 const rechercheParDate = (req,res) => [
     versement_model.rechercheParDate(req,res)
 ]
+
+
 module.exports = {
     versement,
     getClientSolde,
