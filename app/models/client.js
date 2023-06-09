@@ -57,10 +57,10 @@ const deleteClient = (req, res) => {
         res.status(200).send(`User deleted with ID: ${numero_compte}`)
     })
 }
-
+ 
 const searchClient = (req, res) => {
     const q = "%" + req.body.q + "%"
-    
+
     pool.query('SELECT * FROM client WHERE lower(nom) LIKE lower($1)', [q], (error, results) => {
         if (error)
             throw error

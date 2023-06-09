@@ -1,5 +1,13 @@
-const { pool } = require('./pollpg')
+const {pool} = require('./pollpg')
 
+const getVersements = (req, res) => {
+    pool.query('SELECT * FROM versement', (error, results) => {
+        if (error) {
+            throw error;
+        }
+        res.status(200).json(results.rows)
+    })
+}
 const getClientSolde = (req, res) => {
     const numero_compte = parseInt(req.params.numero_compte);
 
@@ -37,7 +45,7 @@ const versement = (req, res) => {
             const date_versement = new Date(); // Obtenir la date et l'heure actuelles
             const values = [numero_compte, montant_versement, date_versement];
             console.log(date_versement);
-            pool.query('INSERT INTO versement (numero_compte, montant_versement, date) VALUES ($1, $2, $3)', values, (error) => {
+            pool.query('INSERT INTO versement (numero_compte, montant_versement, date_versement) VALUES ($1, $2, $3)', values, (error) => {
                 if (error) {
                     throw error;
                 }
@@ -131,11 +139,11 @@ const modifierversement = (req, res) => {
     })
 }
 
-const rechercheParDate = (req,res) => {
+const rechercheParDate = (req, res) => {
     const date = req.body.date;
 
     //Recherche par date
-    pool.query('SELECT id,numero_compte,montant_versement,date FROM versement WHERE date = $1', [date], (error,results) => {
+    pool.query('SELECT id,numero_compte,montant_versement,date FROM versement WHERE date = $1', [date], (error, results) => {
         if (error) {
             throw error;
         }
@@ -143,11 +151,11 @@ const rechercheParDate = (req,res) => {
     })
 }
 
-
 module.exports = {
     versement,
     getClientSolde,
     supprimerversement,
     modifierversement,
-    rechercheParDate
+    rechercheParDate,
+    getVersements
 }
