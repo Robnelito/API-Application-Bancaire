@@ -29,7 +29,7 @@ const getRetrait = (req, res) => {
 
 const retrait = (req, res) => {
   const numero_compte = parseInt(req.params.numero_compte);
-  const montant_retrait = parseFloat(req.body.montant);
+  const montant_retrait = parseFloat(req.body.montant_retrait);
   const numero_cheque = req.body.numero_cheque;
 
   // Récupérer le solde actuel du client
@@ -90,7 +90,7 @@ const retrait = (req, res) => {
 
 const updateRetrait = (req, res) => {
   const numero_compte = parseInt(req.params.numero_compte);
-  const montant_retrait = parseFloat(req.body.montant);
+  const montant_retrait = parseFloat(req.body.montant_retrait);
 
   pool.connect((error, client, release) => {
     if (error) {
