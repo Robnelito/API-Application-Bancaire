@@ -90,6 +90,7 @@ const retrait = (req, res) => {
 
 const updateRetrait = (req, res) => {
   const numero_compte = parseInt(req.params.numero_compte);
+  const numero_cheque = req.body.numero_cheque.toString();
   const montant_retrait = parseFloat(req.body.montant_retrait);
 
   pool.connect((error, client, release) => {
@@ -122,8 +123,8 @@ const updateRetrait = (req, res) => {
             const differenceMontant = montant_retrait - ancienMontant;
 
             client.query(
-              "UPDATE retrait SET montant_retrait = $1 WHERE numero_compte = $2",
-              [montant_retrait, numero_compte],
+              "UPDATE retrait SET numero_cheque = $1, montant_retrait = $2 WHERE numero_compte = $3",
+              [numero_cheque, montant_retrait, numero_compte],
               (error, result) => {
                 if (error || result.rowCount === 0) {
                   transactionError = true; // Marquer une erreur de transaction
