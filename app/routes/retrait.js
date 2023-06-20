@@ -4,7 +4,7 @@ const retraitController = require("./../controllers/retrait");
 router.get("/", retraitController.getRetrait);
 router.get("/:numero_compte", retraitController.getClientSolde);
 router.post("/:numero_compte", retraitController.retrait);
-router.put("/:numero_compte", retraitController.updateRetrait);
+router.put("/:numero_retrait", retraitController.updateRetrait);
 router.delete("/:numero_retrait", retraitController.deleteRetrait);
 router.post("/", retraitController.searchRetrait);
 

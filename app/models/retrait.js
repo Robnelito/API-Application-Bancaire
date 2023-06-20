@@ -89,7 +89,8 @@ const retrait = (req, res) => {
 };
 
 const updateRetrait = (req, res) => {
-  const numero_compte = parseInt(req.params.numero_compte);
+  const numero_retrait = parseInt(req.params.numero_retrait);
+  const numero_compte = parseInt(req.body.numero_compte);
   const numero_cheque = req.body.numero_cheque.toString();
   const montant_retrait = parseFloat(req.body.montant_retrait);
 
@@ -106,8 +107,8 @@ const updateRetrait = (req, res) => {
         return res.status(500).send("Erreur de transaction");
       }
       client.query(
-        "SELECT montant_retrait FROM retrait WHERE numero_compte = $1 FOR UPDATE",
-        [numero_compte],
+        "SELECT montant_retrait FROM retrait WHERE numero_retrait = $1 FOR UPDATE",
+        [numero_retrait],
         (error, result) => {
           if (error) {
             transactionError = true; // Marquer une erreur de transaction
@@ -123,8 +124,8 @@ const updateRetrait = (req, res) => {
             const differenceMontant = montant_retrait - ancienMontant;
 
             client.query(
-              "UPDATE retrait SET numero_cheque = $1, montant_retrait = $2 WHERE numero_compte = $3",
-              [numero_cheque, montant_retrait, numero_compte],
+              "UPDATE retrait SET numero_cheque = $1, montant_retrait = $2 WHERE numero_retrait = $3",
+              [numero_cheque, montant_retrait, numero_retrait],
               (error, result) => {
                 if (error || result.rowCount === 0) {
                   transactionError = true; // Marquer une erreur de transaction
@@ -138,6 +139,7 @@ const updateRetrait = (req, res) => {
 
                 if (!transactionError) {
                   // Vérifier s'il y a eu une erreur de transaction avant de continuer
+                  console.log(numero_compte);
                   client.query(
                     "UPDATE client SET solde = solde - $1 WHERE numero_compte = $2",
                     [differenceMontant, numero_compte],
