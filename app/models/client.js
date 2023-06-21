@@ -14,10 +14,10 @@ const getClients = (req, res) => {
 
 const getClient = (req, res) => {
   const numero_compte = parseInt(req.params.numero_compte);
-
+  
   pool.query(
-    "SELECT * FROM client WHERE numero_compte = $1",
-    [numero_compte],
+    "SELECT r.numero_cheque AS numero_cheque_retrait, NULL AS numero_cheque_versement, r.montant_retrait FROM retrait AS r WHERE r.numero_compte = $1 UNION SELECT NULL AS numero_cheque_retrait, v.numero_cheque AS numero_cheque_versement, v.montant_versement FROM versement AS v WHERE v.numero_compte = $2",
+    [numero_compte, numero_compte],
     (error, results) => {
       if (error) {
         throw error;
