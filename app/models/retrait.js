@@ -139,7 +139,6 @@ const updateRetrait = (req, res) => {
 
                 if (!transactionError) {
                   // Vérifier s'il y a eu une erreur de transaction avant de continuer
-                  console.log(numero_compte);
                   client.query(
                     "UPDATE client SET solde = solde - $1 WHERE numero_compte = $2",
                     [differenceMontant, numero_compte],

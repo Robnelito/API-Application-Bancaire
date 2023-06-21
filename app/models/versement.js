@@ -127,7 +127,6 @@ const supprimerversement = (req, res) => {
 
 const modifierversement = (req, res) => {
   const id = parseInt(req.params.id);
-  console.log(id);
   const soldeModif = parseInt(req.body.montant_versement);
   const numero_cheque = req.body.numero_cheque;
 
