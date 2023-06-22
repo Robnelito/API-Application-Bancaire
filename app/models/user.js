@@ -42,6 +42,7 @@ const loginUtilisateur = (req, res) => {
         } else if (!isMatch) {
           res.json({
             message: "mot de passe incorrecte",
+            estConnecte: false,
           });
         } else {
           let email = results.rows[0].email;
@@ -53,8 +54,8 @@ const loginUtilisateur = (req, res) => {
             }
           );
           res.json({
-            message: "connecter",
             token: token,
+            estConnecte: true,
           });
         }
       });
